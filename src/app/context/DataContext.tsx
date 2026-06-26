@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useMemo, useState, ReactNode } from 'react';
 import {
   mockResidents,
   mockApartments,
@@ -116,6 +116,38 @@ function syncResidentInApartments(
   });
 }
 
+function getResidentSyncedApartments(apartments: Apartment[], residents: Resident[]) {
+  return apartments.map((apartment) => {
+    const owner = residents.find(
+      (resident) =>
+        resident.role === 'owner' &&
+        resident.apartmentNumber === apartment.number &&
+        resident.status === 'active'
+    );
+    const tenant = residents.find(
+      (resident) =>
+        resident.role === 'tenant' &&
+        resident.apartmentNumber === apartment.number &&
+        resident.status === 'active'
+    );
+
+    const syncedApartment: Apartment = {
+      ...apartment,
+      ownerId: owner?.id ?? apartment.ownerId,
+      ownerName: owner?.name ?? apartment.ownerName,
+      tenantId: tenant?.id ?? apartment.tenantId,
+      tenantName: tenant?.name ?? apartment.tenantName,
+    };
+
+    if (syncedApartment.status !== 'maintenance') {
+      syncedApartment.status =
+        syncedApartment.ownerName || syncedApartment.tenantName ? 'occupied' : 'vacant';
+    }
+
+    return syncedApartment;
+  });
+}
+
 export function DataProvider({ children }: { children: ReactNode }) {
   const [residents, setResidents] = useState<Resident[]>(mockResidents);
   const [apartments, setApartments] = useState<Apartment[]>(mockApartments);
@@ -124,6 +156,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [claims, setClaims] = useState<Claim[]>(mockClaims);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [announcements, setAnnouncements] = useState<Announcement[]>(mockAnnouncements);
+  const residentSyncedApartments = useMemo(
+    () => getResidentSyncedApartments(apartments, residents),
+    [apartments, residents]
+  );
 
   // --- Residents ---
   const addResident = (r: Omit<Resident, 'id'>): Resident => {
@@ -251,7 +287,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     <DataContext.Provider
       value={{
         residents,
-        apartments,
+        apartments: residentSyncedApartments,
         expenses,
         payments,
         claims,
