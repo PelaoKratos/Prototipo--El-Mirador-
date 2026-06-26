@@ -44,9 +44,9 @@ export const AdminDashboard = () => {
   ];
 
   const morosityData = [
-    { name: 'Al día', value: paidCount, color: '#22C55E' },
-    { name: 'Pendiente', value: pendingCount, color: '#F59E0B' },
-    { name: 'Moroso', value: overdueCount, color: '#EF4444' },
+    { name: 'Al día', value: paidCount, color: '#34D399' },
+    { name: 'Pendiente', value: pendingCount, color: '#FBBF24' },
+    { name: 'Moroso', value: overdueCount, color: '#F87171' },
   ];
 
   return (
@@ -127,11 +127,18 @@ export const AdminDashboard = () => {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                <XAxis dataKey="month" stroke="#64748B" />
-                <YAxis stroke="#64748B" />
-                <Tooltip />
-                <Bar dataKey="recaudado" fill="#2563EB" radius={[8, 8, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#243244" />
+                <XAxis dataKey="month" stroke="#93A4B8" />
+                <YAxis stroke="#93A4B8" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#111827',
+                    borderColor: '#243244',
+                    color: '#E5ECF5',
+                  }}
+                  cursor={{ fill: 'rgba(56, 189, 248, 0.08)' }}
+                />
+                <Bar dataKey="recaudado" fill="#38BDF8" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -157,7 +164,13 @@ export const AdminDashboard = () => {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#111827',
+                    borderColor: '#243244',
+                    color: '#E5ECF5',
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>

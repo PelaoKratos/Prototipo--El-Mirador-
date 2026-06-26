@@ -2,47 +2,47 @@
 
 :root {
   --font-size: 16px;
-  --background: #F8FAFC;
-  --foreground: #0F172A;
-  --card: #ffffff;
-  --card-foreground: #0F172A;
-  --popover: #ffffff;
-  --popover-foreground: #0F172A;
-  --primary: #2563EB;
+  --background: #080D16;
+  --foreground: #E5ECF5;
+  --card: #111827;
+  --card-foreground: #E5ECF5;
+  --popover: #111827;
+  --popover-foreground: #E5ECF5;
+  --primary: #38BDF8;
   --primary-foreground: #ffffff;
-  --secondary: #0F172A;
-  --secondary-foreground: #ffffff;
-  --muted: #F1F5F9;
-  --muted-foreground: #64748B;
-  --accent: #E0E7FF;
-  --accent-foreground: #1E3A8A;
-  --destructive: #EF4444;
+  --secondary: #1F2937;
+  --secondary-foreground: #E5ECF5;
+  --muted: #172033;
+  --muted-foreground: #93A4B8;
+  --accent: #1E3A5F;
+  --accent-foreground: #E0F2FE;
+  --destructive: #F87171;
   --destructive-foreground: #ffffff;
-  --success: #22C55E;
-  --success-foreground: #ffffff;
-  --warning: #F59E0B;
-  --warning-foreground: #ffffff;
-  --border: #E2E8F0;
-  --input: #E2E8F0;
-  --input-background: #ffffff;
-  --switch-background: #CBD5E1;
+  --success: #34D399;
+  --success-foreground: #052E24;
+  --warning: #FBBF24;
+  --warning-foreground: #1F1300;
+  --border: #243244;
+  --input: #2B3A4F;
+  --input-background: #0F172A;
+  --switch-background: #334155;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #2563EB;
-  --chart-1: #2563EB;
-  --chart-2: #22C55E;
-  --chart-3: #F59E0B;
-  --chart-4: #EF4444;
-  --chart-5: #8B5CF6;
+  --ring: #38BDF8;
+  --chart-1: #38BDF8;
+  --chart-2: #34D399;
+  --chart-3: #FBBF24;
+  --chart-4: #F87171;
+  --chart-5: #A78BFA;
   --radius: 0.75rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #0F172A;
-  --sidebar-primary: #2563EB;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #F1F5F9;
-  --sidebar-accent-foreground: #0F172A;
-  --sidebar-border: #E2E8F0;
-  --sidebar-ring: #2563EB;
+  --sidebar: #0B1220;
+  --sidebar-foreground: #DCE7F3;
+  --sidebar-primary: #38BDF8;
+  --sidebar-primary-foreground: #06121E;
+  --sidebar-accent: #162033;
+  --sidebar-accent-foreground: #E0F2FE;
+  --sidebar-border: #243244;
+  --sidebar-ring: #38BDF8;
 }
 
 .dark {
@@ -134,6 +134,9 @@
 
   body {
     @apply bg-background text-foreground;
+    background:
+      radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), transparent 32rem),
+      linear-gradient(135deg, #080D16 0%, #0B1220 48%, #111827 100%);
   }
 
   /**
