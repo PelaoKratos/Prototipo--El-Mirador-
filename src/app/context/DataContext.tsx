@@ -69,6 +69,53 @@ function uid() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+function syncResidentInApartments(
+  apartments: Apartment[],
+  nextResident: Resident | null,
+  previousResident?: Resident
+) {
+  return apartments.map((apartment) => {
+    let updated = { ...apartment };
+
+    if (previousResident) {
+      const wasOwner =
+        previousResident.role === 'owner' &&
+        updated.ownerId === previousResident.id;
+      const wasTenant =
+        previousResident.role === 'tenant' &&
+        (updated.tenantId === previousResident.id ||
+          (updated.number === previousResident.apartmentNumber &&
+            updated.tenantName === previousResident.name));
+
+      if (wasOwner) {
+        const { ownerId, ownerName, ...rest } = updated;
+        updated = rest;
+      }
+
+      if (wasTenant) {
+        const { tenantId, tenantName, ...rest } = updated;
+        updated = rest;
+      }
+    }
+
+    if (nextResident && updated.number === nextResident.apartmentNumber) {
+      if (nextResident.role === 'owner') {
+        updated.ownerId = nextResident.id;
+        updated.ownerName = nextResident.name;
+      } else {
+        updated.tenantId = nextResident.id;
+        updated.tenantName = nextResident.name;
+      }
+    }
+
+    if (updated.status !== 'maintenance') {
+      updated.status = updated.ownerName || updated.tenantName ? 'occupied' : 'vacant';
+    }
+
+    return updated;
+  });
+}
+
 export function DataProvider({ children }: { children: ReactNode }) {
   const [residents, setResidents] = useState<Resident[]>(mockResidents);
   const [apartments, setApartments] = useState<Apartment[]>(mockApartments);
@@ -82,12 +129,27 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const addResident = (r: Omit<Resident, 'id'>): Resident => {
     const newR: Resident = { ...r, id: uid() };
     setResidents((prev) => [...prev, newR]);
+    setApartments((prev) => syncResidentInApartments(prev, newR));
     return newR;
   };
-  const updateResident = (id: string, data: Partial<Resident>) =>
+  const updateResident = (id: string, data: Partial<Resident>) => {
+    const previousResident = residents.find((r) => r.id === id);
+    const nextResident = previousResident ? { ...previousResident, ...data } : undefined;
+
     setResidents((prev) => prev.map((r) => (r.id === id ? { ...r, ...data } : r)));
-  const deleteResident = (id: string) =>
+
+    if (nextResident) {
+      setApartments((prev) => syncResidentInApartments(prev, nextResident, previousResident));
+    }
+  };
+  const deleteResident = (id: string) => {
+    const previousResident = residents.find((r) => r.id === id);
+
     setResidents((prev) => prev.filter((r) => r.id !== id));
+    if (previousResident) {
+      setApartments((prev) => syncResidentInApartments(prev, null, previousResident));
+    }
+  };
 
   // --- Apartments ---
   const addApartment = (a: Omit<Apartment, 'id'>): Apartment => {

@@ -26,11 +26,11 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table';
-import { mockApartments } from '../../data/mockData';
 import { Apartment } from '../../types';
 import { formatCurrency } from '../../lib/utils';
 import { Building, Plus, Pencil, Trash2, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import { useData } from '../../context/DataContext';
 
 const typeLabel: Record<Apartment['type'], string> = {
   studio: 'Estudio',
@@ -55,7 +55,7 @@ const emptyApartment: Omit<Apartment, 'id'> = {
 };
 
 export const DepartmentsPage = () => {
-  const [apartments, setApartments] = useState<Apartment[]>(mockApartments);
+  const { apartments, addApartment, updateApartment, deleteApartment } = useData();
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -98,13 +98,10 @@ export const DepartmentsPage = () => {
       return;
     }
     if (editingApartment) {
-      setApartments((prev) =>
-        prev.map((a) => (a.id === editingApartment.id ? { ...form, id: editingApartment.id } : a))
-      );
+      updateApartment(editingApartment.id, form);
       toast.success('Departamento actualizado');
     } else {
-      const newApt: Apartment = { ...form, id: `apt-${Date.now()}` };
-      setApartments((prev) => [...prev, newApt]);
+      addApartment(form);
       toast.success('Departamento creado');
     }
     setDialogOpen(false);
@@ -116,7 +113,9 @@ export const DepartmentsPage = () => {
   };
 
   const handleDelete = () => {
-    setApartments((prev) => prev.filter((a) => a.id !== deletingId));
+    if (!deletingId) return;
+
+    deleteApartment(deletingId);
     toast.success('Departamento eliminado');
     setDeleteDialogOpen(false);
     setDeletingId(null);

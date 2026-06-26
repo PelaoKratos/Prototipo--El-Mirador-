@@ -65,6 +65,7 @@ export interface Apartment {
   status: 'occupied' | 'vacant' | 'maintenance';
   ownerId?: string;
   ownerName?: string;
+  tenantId?: string;
   tenantName?: string;
   monthlyFee: number;
 }
