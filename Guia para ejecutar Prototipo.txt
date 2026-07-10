@@ -1,0 +1,5 @@
+cd "D:\Respaldo\Analista Programador\Ingenieria de Software\Examen Transversal\Prototipo"
+
+npm run dev
+
+http://localhost:5173/
